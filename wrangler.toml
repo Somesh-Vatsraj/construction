@@ -7,12 +7,12 @@ workers_dev = true
 ENVIRONMENT = "production"
 IMAGE_HOST = "imgbb"
 # Public site URL used for canonical/sitemap
-SITE_URL = "https://mjdevelopers.example"
+SITE_URL = "https://mj-developers.someshsoftwareengineer-233.workers.dev"
 
 [[d1_databases]]
 binding = "DB"
 database_name = "mj_dev"
-database_id = "REPLACE_WITH_YOUR_D1_ID"
+database_id = "2d818aeb-a745-4e6a-8546-b756d57e183d"
 
 # Secrets (set with `wrangler secret put`):
 #   ADMIN_JWT_SECRET    — random string, e.g. `openssl rand -hex 32`
