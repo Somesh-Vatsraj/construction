@@ -3,14 +3,16 @@ main = "worker/src/index.js"
 compatibility_date = "2024-10-01"
 workers_dev = true
 
-[vars]
-ENVIRONMENT = "production"
-IMAGE_HOST = "imgbb"
-# Public site URL used for canonical/sitemap
-SITE_URL = "https://mj-developers.someshsoftwareengineer-233.workers.dev"
+# ⬇️ YE NAYA SECTION ADD KARO — Worker ko static files serve karne ke liye
 [assets]
 directory = "./dist"
 binding = "ASSETS"
+not_found_handling = "single-page-application"
+
+[vars]
+ENVIRONMENT = "production"
+IMAGE_HOST = "imgbb"
+SITE_URL = "https://mj-developers.someshsoftwareengineer-233.workers.dev"
 
 [[d1_databases]]
 binding = "DB"
@@ -18,6 +20,5 @@ database_name = "mj_dev"
 database_id = "2d818aeb-a745-4e6a-8546-b756d57e183d"
 
 # Secrets (set with `wrangler secret put`):
-#   ADMIN_JWT_SECRET    — random string, e.g. `openssl rand -hex 32`
-#   IMGBB_API_KEY       — from https://api.imgbb.com/
-#   ADMIN_INIT_PASSWORD — only used once to seed the first admin
+#   ADMIN_JWT_SECRET
+#   IMGBB_API_KEY
