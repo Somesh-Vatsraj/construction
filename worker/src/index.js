@@ -4,16 +4,33 @@ import { json, error, withCors, sanitize, validEmail, validPhone } from './utils
 
 export default {
   async fetch(request, env, ctx) {
-    if (request.method === 'OPTIONS') {
+    const url = new URL(request.url)
+
+    // ---- CORS preflight (sirf API ke liye) ----
+    if (request.method === 'OPTIONS' && url.pathname.startsWith('/api/')) {
       return new Response(null, { headers: corsHeaders() })
     }
-    try {
-      const res = await route(request, env)
-      return withCors(res)
-    } catch (e) {
-      console.error(e)
-      return withCors(json({ error: 'Server error' }, 500))
+
+    // ---- API routes ----
+    if (url.pathname.startsWith('/api/')) {
+      try {
+        const res = await route(request, env)
+        return withCors(res)
+      } catch (e) {
+        console.error(e)
+        return withCors(json({ error: 'Server error' }, 500))
+      }
     }
+
+    // ---- Baaki sab → frontend static assets (dist/) ----
+    // Agar ASSETS binding nahi hai, to clear error do
+    if (!env.ASSETS) {
+      return new Response(
+        'Frontend not deployed. Add [assets] section to wrangler.toml and run "npm run build" before "wrangler deploy".',
+        { status: 500, headers: { 'Content-Type': 'text/plain' } }
+      )
+    }
+    return env.ASSETS.fetch(request)
   }
 }
 
@@ -86,7 +103,6 @@ async function login(request, env) {
 
 /* ---------- Public GET ---------- */
 async function getSite(env) {
-  // Load all content keys + settings + contact + seo in one call
   const rows = await env.DB.prepare('SELECT key, value FROM content').all()
   const content = {}
   for (const r of rows.results || []) {
@@ -125,7 +141,7 @@ async function getPublicProject(env, slug) {
 
 async function listPublic(env, table) {
   const order = table === 'gallery' ? 'sort_order ASC, created_at DESC' : 'sort_order ASC, created_at ASC'
-  const rows = await env.DB.prepare(`SELECT * FROM ${table}`).all()
+  const rows = await env.DB.prepare(`SELECT * FROM ${table} ORDER BY ${order}`).all()
   const key = table === 'construction_progress' ? 'construction' : table
   return json({ [key]: rows.results || [] })
 }
@@ -179,7 +195,6 @@ const ALLOWED_RESOURCES = {
 }
 
 async function adminRouter(request, env, path, method, user) {
-  // /api/admin/{resource}[/{id}]
   const parts = path.replace('/api/admin/', '').split('/')
   const resource = parts[0]
   const id = parts[1]
@@ -329,7 +344,6 @@ async function adminUpload(request, env) {
 
   const result = await uploadImage(env, file, file.name || 'upload.jpg')
 
-  // Save metadata row (for the media library)
   await env.DB.prepare(
     'INSERT INTO media (url, thumb, alt_text, title, category, project_id, provider, meta) VALUES (?,?,?,?,?,?,?,?)'
   ).bind(
