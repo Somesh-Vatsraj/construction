@@ -8,6 +8,9 @@ ENVIRONMENT = "production"
 IMAGE_HOST = "imgbb"
 # Public site URL used for canonical/sitemap
 SITE_URL = "https://mj-developers.someshsoftwareengineer-233.workers.dev"
+[assets]
+directory = "./dist"
+binding = "ASSETS"
 
 [[d1_databases]]
 binding = "DB"
