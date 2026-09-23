@@ -1,0 +1,27 @@
+{
+  "name": "mj-developers",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "worker:dev": "wrangler dev worker/src/index.js --config wrangler.toml",
+    "db:migrate:local": "wrangler d1 migrations apply mj_dev --local --config wrangler.toml",
+    "db:migrate:remote": "wrangler d1 migrations apply mj_dev --remote --config wrangler.toml",
+    "db:seed:local": "wrangler d1 execute mj_dev --local --file=worker/migrations/0002_seed.sql --config wrangler.toml",
+    "deploy:worker": "wrangler deploy --config wrangler.toml",
+    "deploy:pages": "npm run build && wrangler pages deploy dist --project-name=mj-developers"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "vite": "^5.4.8",
+    "wrangler": "^3.78.0"
+  }
+}
