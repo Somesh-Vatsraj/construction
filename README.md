@@ -4,6 +4,7 @@ A complete, production-ready real estate website with a fully manageable admin p
 built on **React + Vite** (frontend) and **Cloudflare Workers + D1** (backend).
 
 ---
+<img width="1893" height="896" alt="Screenshot 2026-09-25 191140" src="https://github.com/user-attachments/assets/2715eae2-3234-4be7-85e0-a9afed51de39" />
 
 ## ✨ Features
 
